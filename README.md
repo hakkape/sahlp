@@ -1,7 +1,9 @@
 # Solver for the Single Assignment Hub Location Problem
 This is a re-implementation of the Benders' Decomposition-based solver proposed by [Zetina et al.](https://github.com/czet88/Benders_4_Quadratic_Facility_Location) for Hub Location Problems.
-It is implemented in the `SCIP` framework and uses `CPLEX` to solve the Benders' subproblems and optionally the LPs in the branch-and-bound tree.
-With this code, it is possible to solve very large scale hub location problems.
+This re-implementation was created as part of a collaboration between the Chair of Operations Research at RWTH Aachen and DHL Data & Analytics where we researched various Hub Location Problems.
+It is implemented in the `SCIP` framework and uses either `CPLEX`, `MCFClass` or `SOPLEX` to solve the Benders' subproblems and optionally the LPs in the branch-and-bound tree.
+We hope that this implementation may offer a starting point for others working on similar problems or just another option to try when solving large scale Single Allocation Hub Location Problems.
+Some experiments indicated that the performance is somewhat worse than that of the reference implementation by Zetina et al., but it is certainly more memory-efficient and easier to extend for those with `SCIP` experience.
 It supports various input formats: instances can be passed via two different file formats (described further down) or passed directly via a `C`, `C++` or `Python` interface.
 
 
@@ -31,6 +33,7 @@ If both can not be found, the solver falls back to solving the subproblems with 
 
 #### Notes on Optional Installation of MCFClass
 This solver can be downloaded and installed from here: https://github.com/frangio68/Min-Cost-Flow-Class
+Please consider their license as well if you want to use their solver for the subproblems.
 The following flags for `cmake` should be set when building it (replacing `<INSTALLATION DIRECTORY>` by some directory that `cmake` will check when building the main code later):
 ```bash
 mkdir build
