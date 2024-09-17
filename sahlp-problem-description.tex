@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\begin{document}
+
+\title{The Single Allocation Hub Location Problem (SAHLP)}
+\date{}
+\author{Alexander Helber}
+\maketitle
+\paragraph{Inputs}
+\begin{itemize}
+    \item Set of \(n\) nodes \(I = \{0, 1, \dots, n -1\}\).
+    \item Set of potential hubs \(H \subseteq I\).
+    \item Set of hubs \(H_i \subseteq H\) that each node \(i \in I\) may be assigned to.
+    \item Assignment costs \(c^\mathrm{assign}_{ik} \geq 0\) for all allowed assignments \(i \in I, k \in H_i\) (note: the self-assignment cost \(c_{kk}\) can be used to represent the cost of opening a hub \(k \in H\)).
+    \item Demands \(w_{ij} \geq 0\) for all node pairs \(i, j \in I\).
+    \item Transfer cost factors \(c^\mathrm{transfer}_{k\ell} \geq 0\) per unit of demand between all hub pairs \(k, \ell \in H\).
+    \item A maximum number of hubs to open \(p \in \mathbb{Z}_{\geq 0}\).
+\end{itemize}
+
+\paragraph{Model}
+The following model gives a concise description of the Single Assignment Hub Location Problem.
+Note that this is not the actual formulation used to solve the problem.
+% \begin{noindent}
+\begin{alignat}{20}
+     & \min \;& \sum_{i \in I}\sum_{k \in H_i} c_{ik}^\mathrm{assign} \cdot z_{ik} + \sum_{i \in I}\sum_{j \in I}\sum_{k \in H_i}\sum_{\ell \in H_j} w_{ij} \cdot c_{k\ell}^\mathrm{transfer} \cdot z_{ik} \cdot z_{j\ell}\span\span\span\span\span\span\span\span\span\span \\
+     & \text{s.t.} & \sum_{k \in H_i} z_{ik} & = & \; & 1 & \; & \forall i \in I \label{assign} \\
+     & & z_{ik} & \leq && z_{kk} && \forall i \in I, k \in H_i \label{link}\\
+     & & z_{kk} & \leq && p      \label{pmedian}\\
+     & & z_{ik} & \in && \{0,1\} &\;& \forall i \in I, k \in H_i 
+\end{alignat}
+% \end{noindent}
+The variable \(z_{ik}\) represent if node \(i\) is assigned to hub \(k\) (\(z_{ik} = 1\)) or not (\(z_{ik} = 0\)).
+Additionally, \(z_{kk} = 1\) for some \(k \in H\) represents that a hub is opened at node \(k\).
+The objective function minimizes the sum of the assignment costs and the costs for transferring shipments between hubs.
+Constraint \eqref{assign} states that every node has to be assigned to exactly one hub, while constraint \eqref{link} ensures that nodes can only be assigned to opened hubs.
+Constraint \eqref{pmedian} requires at most \(p\) hubs to be opened.
+
+\paragraph{Additional constraints}
+The implemented solver can also deal with the following two classes of constraints:
+
+\begin{itemize}
+    \item \textbf{Capacity constraints}: Hubs \(k \in H_k\) can be given a capacity \(C_k\) in terms of the \textit{delivery volumes}, i.e., the volume of shipments being received by customers assigned to the hub.
+    Let \(I_k = \{i \in I \mid k \in H_i\}\) denote the set of nodes that can be assigned to hub \(k \in H\) and \(D_i = \sum_{j \in I} w_{ji}\) the inbound volume of each node \(i \in I\).
+    Then we can add constraints as follows:
+    \begin{equation}
+        \sum_{i \in I_k} D_i z_{ik} \leq C_k z_{kk} \quad \forall k \in H
+    \end{equation}
+    \item \textbf{`Open N of a set of hubs' constraints:} It is possible to pass any number of pairs \((\tilde{p},\tilde{H})\) such that exactly \(\tilde{p} \in \mathbb{Z}_{\geq 0}\) hubs of the set \(\tilde{H} \subseteq H\) are opened:
+    \begin{equation}
+        \sum_{k \in \tilde{H}} z_{kk} = \tilde{p}
+    \end{equation}
+    This allows to represent practical scenarios like `we want to keep 38 of the existing 40 hubs and replace two of them'.
+\end{itemize}
+
+\end{document}

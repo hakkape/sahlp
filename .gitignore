@@ -1,0 +1,12 @@
+build/
+.vscode/
+*egg-info
+__pycache__
+cplex_studio*
+*.aux
+*_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
+.cache
