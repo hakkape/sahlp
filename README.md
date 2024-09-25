@@ -1,7 +1,7 @@
 # Solver for the Single Assignment Hub Location Problem
 This is a re-implementation of the Benders' Decomposition-based solver proposed by [Zetina et al.](https://github.com/czet88/Benders_4_Quadratic_Facility_Location) for Hub Location Problems.
 This re-implementation was created as part of a collaboration between the Chair of Operations Research at RWTH Aachen and DHL Data & Analytics where we researched various Hub Location Problems.
-It is implemented in the `SCIP` framework and uses either `CPLEX`, `MCFClass` or `SOPLEX` to solve the Benders' subproblems and optionally the LPs in the branch-and-bound tree.
+It is implemented in the `SCIP` framework and uses either `CPLEX`, `MCFClass` or `SOPLEX` to solve the Benders' subproblems and either `SOPLEX` or `CPLEX` to solve the LPs in the branch-and-bound tree.
 We hope that this implementation may offer a starting point for others working on similar problems or just another option to try when solving large scale Single Allocation Hub Location Problems.
 Some experiments indicated that the performance is somewhat worse than that of the reference implementation by Zetina et al., but it is certainly more memory-efficient and easier to extend for those with `SCIP` experience.
 It supports various input formats: instances can be passed via two different file formats (described further down) or passed directly via a `C`, `C++` or `Python` interface.
@@ -137,8 +137,8 @@ Such files are structured as follows:
 4 0 15 1 0 2 15 3 30 
 4 0 30 1 15 2 0 3 15 # example: node 2 can be assigned to node 0 for cost of 30, to node 1 for cost of 15 etc.
 4 0 45 1 30 2 15 3 0 
-10 5 2 8 # capacities of potential hubs (in terms of demand units delivered by that hub). This line is optional and can be left out
-OPEN 1 2 0 1 # optional: constraint to open exactly N out a set of M many hubs. Syntax: OPEN N M hub_1 hub_2 ... hub_M. Here: we have to open either hub 0 or hub 1.
+10 5 2 8 # optional: capacities of potential hubs (in terms of demand units delivered by that hub). This line can be left out
+OPEN 1 2 0 1 # optional: constraint to open exactly N out a set of M many hubs. Syntax: OPEN N M hub_1 hub_2 ... hub_M. Here: we have to open either hub 0 or hub 1. Can add number of these lines.
 ```
 
 The second file format actually requires two files, a `.hlp` file describing the distances and demands between nodes and a `.hlps` file describing problem parameters like the number of hubs to open and the cost factors.
