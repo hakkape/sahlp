@@ -7,6 +7,8 @@
 #include "scip/heur_trysol.h"
 #include "scip/pub_cons.h"
 #include "scip/type_benders.h"
+#include <fstream>
+#include <iomanip>
 #include <algorithm>
 #include <functional>
 #include <string>
